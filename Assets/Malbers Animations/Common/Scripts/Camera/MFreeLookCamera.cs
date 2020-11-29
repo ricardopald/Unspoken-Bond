@@ -2,6 +2,7 @@
 using MalbersAnimations.Scriptables;
 using System.Collections;
 using UnityEngine.Events;
+using ActionController;
 
 /// <summary> This is the same Camera FreeLookCam of the Stardard Assets Modify to Fit My Needs  </summary>
 namespace MalbersAnimations
@@ -29,9 +30,6 @@ namespace MalbersAnimations
         public float m_TiltMax = 75f;                               // The maximum value of the x axis rotation of the pivot.
         public float m_TiltMin = 45f;                               // The minimum value of the x axis rotation of the pivot.
 
-        [Header("Camera Input Axis")]
-        public InputAxis Vertical = new InputAxis("Mouse Y", true, false);
-        public InputAxis Horizontal = new InputAxis("Mouse X", true, false);
         private IGravity TargetGravity;
 
         [Space]
@@ -111,12 +109,7 @@ namespace MalbersAnimations
             m_TransformTargetRot = transform.localRotation;
 
             ActiveFOV = Cam.fieldOfView;
-
-            inputSystem = DefaultInput.GetInputSystem(PlayerID);
-
-            Horizontal.InputSystem = Vertical.InputSystem = inputSystem;        //Update the Input System on the Axis
-
-
+            
             defaultUpdate = updateType;
 
             if (DefaultState == null)
@@ -178,8 +171,8 @@ namespace MalbersAnimations
 
         public void EnableInput(bool value)
         {
-            Vertical.active = value;
-            Horizontal.active = value;
+            //Vertical.active = value;
+            //Horizontal.active = value;
         }
 
 
@@ -187,8 +180,9 @@ namespace MalbersAnimations
         {
             if (Time.timeScale < float.Epsilon) return;
 
-            if (Horizontal.active) XCam = Horizontal.GetAxis;
-            if (Vertical.active) YCam = Vertical.GetAxis;
+            Vector2 input = ACInputController.m_RightJoystickInput;
+            XCam = input.x;
+            YCam = input.y;
 
             m_LookAngle += XCam * m_TurnSpeed;                                                     // Adjust the look angle by an amount proportional to the turn speed and horizontal input.
 
